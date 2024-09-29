@@ -32,3 +32,19 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+/* New styles for the visitor counter */
+#visitor-counter {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+#visitor-count {
+    font-weight: bold;
+    color: #007BFF;
+}

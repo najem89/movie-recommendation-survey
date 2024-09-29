@@ -3,12 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movies/Series Recommendation Survey</title>
+    <title>Movie/Series Recommendation Survey</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // Function to fetch and display visitor count
+        function updateVisitorCount() {
+            // Replace 'your-key' with a unique identifier for your page
+            fetch('https://api.countapi.xyz/hit/najem89.github.io/movies-series-recommendation-survey')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visitor-count').textContent = data.value;
+                })
+                .catch(error => console.error('Error fetching visitor count:', error));
+        }
+
+        // Call the function when the page loads
+        window.onload = function() {
+            updateVisitorCount();
+            // If you have any existing onload functions, call them here
+        };
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Movies/Series Recommendation Survey</h1>
+        <h1>Movie/Series Recommendation Survey</h1>
         <form id="surveyForm">
             <div id="questionContainer"></div>
             <button type="button" id="backButton" style="display:none;">Back</button>
@@ -17,6 +35,10 @@
         <div id="resultContainer" style="display:none;">
             <h2>Your Recommendation:</h2>
             <p id="movieRecommendation"></p>
+        </div>
+        <!-- Visitor counter added here -->
+        <div id="visitor-counter">
+            Visitors: <span id="visitor-count">0</span>
         </div>
     </div>
     <script src="script.js"></script>
