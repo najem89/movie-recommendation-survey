@@ -11,11 +11,13 @@ body {
     background: white;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
     text-align: center;
+    font-size: 28px;
+    color: #007BFF;
 }
 
 button {
@@ -27,13 +29,33 @@ button {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px auto;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* New styles for the visitor counter */
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style for the Next button on top */
+.top-button {
+    margin-bottom: 20px; /* Add some space below */
+}
+
+/* Style for the Back button at the bottom */
+.bottom-button {
+    margin-top: 20px; /* Add some space above */
+}
+
+/* Visitor counter styles */
 #visitor-counter {
     text-align: center;
     margin-top: 20px;

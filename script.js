@@ -15,13 +15,24 @@ const resultContainer = document.getElementById('resultContainer');
 const movieRecommendation = document.getElementById('movieRecommendation');
 const nextButton = document.getElementById('nextButton');
 const backButton = document.getElementById('backButton');
-
 let currentQuestionIndex = 0;
 const selectedOptions = [];
 
 // Your TMDb API Key
 const apiKey = '16c5651f75b515d6f334afeff8f9536a';
 
+// Function to update the visitor count using CountAPI
+function updateVisitorCount() {
+    fetch('https://api.countapi.xyz/hit/najem89.github.io/movies-series-recommendation-survey')
+        .then(response => response.json())
+        .then(data => {
+            // Display the visitor count on the page
+            document.getElementById('visitor-count').textContent = data.value;
+        })
+        .catch(error => console.error('Error fetching visitor count:', error));
+}
+
+// Adjust question text based on whether it's about movies or series
 function adjustQuestionText(text) {
     const contentType = selectedOptions[0]; // "Movies" or "Series"
     if (contentType === "Series") {
@@ -30,6 +41,7 @@ function adjustQuestionText(text) {
     return text;
 }
 
+// Check if a question should be skipped
 function shouldSkipQuestion(index) {
     const contentType = selectedOptions[0];
     const genre = selectedOptions[1];
@@ -41,6 +53,7 @@ function shouldSkipQuestion(index) {
     return false;
 }
 
+// Load the current question
 function loadQuestion() {
     questionContainer.innerHTML = '';
 
@@ -72,6 +85,7 @@ function loadQuestion() {
     }
 }
 
+// Fetch movie or series recommendations based on survey answers
 function fetchRecommendations() {
     const contentType = selectedOptions[0]; // "Movies" or "Series"
     const genre = selectedOptions[1];
@@ -152,6 +166,7 @@ function fetchRecommendations() {
         });
 }
 
+// Next button functionality
 nextButton.addEventListener('click', () => {
     const selectedOption = Array.from(surveyForm.elements)
         .filter(input => input.checked)
@@ -179,6 +194,7 @@ nextButton.addEventListener('click', () => {
     }
 });
 
+// Back button functionality
 backButton.addEventListener('click', () => {
     currentQuestionIndex--; 
     while (currentQuestionIndex > 0 && shouldSkipQuestion(currentQuestionIndex)) {
@@ -187,4 +203,8 @@ backButton.addEventListener('click', () => {
     loadQuestion(); 
 });
 
-loadQuestion();
+// Initialize survey and visitor counter
+window.onload = function() {
+    loadQuestion();
+    updateVisitorCount(); // Fetch and update visitor count when the page loads
+};
