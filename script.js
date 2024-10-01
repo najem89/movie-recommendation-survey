@@ -1,3 +1,6 @@
+// Get Firebase instances
+const database = window.firebaseDatabase;
+
 const questions = [
     { question: "Do you want to watch Movies or Series?", options: ["Movies", "Series"] },
     { question: "What genre do you prefer?", options: ["Action", "Comedy", "Drama", "Horror", "Sci-Fi", "Romance"] },
@@ -21,39 +24,70 @@ const selectedOptions = [];
 // Your TMDb API Key
 const apiKey = '16c5651f75b515d6f334afeff8f9536a';
 
-// Function to update the visitor count using CountAPI
-function updateVisitorCount() {
-    fetch('https://api.countapi.xyz/hit/najem89.github.io/movies-series-recommendation-survey')
-        .then(response => response.json())
-        .then(data => {
-            // Display the visitor count on the page
-            document.getElementById('visitor-count').textContent = data.value;
-        })
-        .catch(error => console.error('Error fetching visitor count:', error));
+// Visitor counter function using both localStorage and Firebase
+async function updateVisitorCount() {
+    // Get the stored local count
+    let localCount = localStorage.getItem('visitorCount');
+    if (localCount === null) {
+        localCount = 0;
+    } else {
+        localCount = parseInt(localCount);
+    }
+    
+    // Increment local count
+    localCount++;
+    localStorage.setItem('visitorCount', localCount);
+    
+    try {
+        // Import Firebase functions
+        const { ref, runTransaction } = await import("https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js");
+        
+        // Update Firebase count
+        const countRef = ref(database, 'visitorCount');
+        
+        await runTransaction(countRef, (currentCount) => {
+            return (currentCount || 0) + 1;
+        });
+    } catch (error) {
+        console.error('Error updating visitor count:', error);
+        // If Firebase update fails, at least show the local count
+        document.getElementById('visitor-count').textContent = localCount;
+    }
 }
 
-// Adjust question text based on whether it's about movies or series
+// Add a listener to update the counter in real-time
+async function setupRealtimeListener() {
+    try {
+        const { ref, onValue } = await import("https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js");
+        const countRef = ref(database, 'visitorCount');
+        
+        onValue(countRef, (snapshot) => {
+            const count = snapshot.val() || 0;
+            document.getElementById('visitor-count').textContent = count;
+        });
+    } catch (error) {
+        console.error('Error setting up realtime listener:', error);
+    }
+}
+
 function adjustQuestionText(text) {
-    const contentType = selectedOptions[0]; // "Movies" or "Series"
+    const contentType = selectedOptions[0];
     if (contentType === "Series") {
         return text.replace("movie", "series").replace("Movie", "Series");
     }
     return text;
 }
 
-// Check if a question should be skipped
 function shouldSkipQuestion(index) {
     const contentType = selectedOptions[0];
     const genre = selectedOptions[1];
     
     if (contentType === "Series" && genre === "Horror") {
-        // Skip "happy endings" and "true story" questions
         return index === 4 || index === 6;
     }
     return false;
 }
 
-// Load the current question
 function loadQuestion() {
     questionContainer.innerHTML = '';
 
@@ -85,13 +119,12 @@ function loadQuestion() {
     }
 }
 
-// Fetch movie or series recommendations based on survey answers
 function fetchRecommendations() {
-    const contentType = selectedOptions[0]; // "Movies" or "Series"
+    const contentType = selectedOptions[0];
     const genre = selectedOptions[1];
     const releasePreference = selectedOptions[2];
     const durationPreference = selectedOptions[3];
-    const netflixPreference = selectedOptions[selectedOptions.length - 1]; // Last question is always Netflix preference
+    const netflixPreference = selectedOptions[selectedOptions.length - 1];
 
     const movieGenreMap = {
         "Action": 28,
@@ -103,11 +136,11 @@ function fetchRecommendations() {
     };
 
     const tvGenreMap = {
-        "Action": 10759, // Action & Adventure
+        "Action": 10759,
         "Comedy": 35,
         "Drama": 18,
-        "Horror": 9648, // Mystery (closest to Horror for TV)
-        "Sci-Fi": 10765, // Sci-Fi & Fantasy
+        "Horror": 9648,
+        "Sci-Fi": 10765,
         "Romance": 10749
     };
 
@@ -115,12 +148,10 @@ function fetchRecommendations() {
     const genreId = genreMap[genre] || '';
     let searchQuery = `?api_key=${apiKey}&with_genres=${genreId}`;
 
-    // Apply Netflix filter
     if (netflixPreference === "Yes") {
         searchQuery += "&with_watch_providers=8&watch_region=US";
     }
 
-    // Apply release date filter
     const currentYear = new Date().getFullYear();
     if (releasePreference === "New Releases") {
         searchQuery += `&primary_release_date.gte=${currentYear - 2}-01-01`;
@@ -128,7 +159,6 @@ function fetchRecommendations() {
         searchQuery += `&primary_release_date.lte=${currentYear - 20}-12-31`;
     }
 
-    // Apply duration filter for movies
     if (contentType === "Movies") {
         if (durationPreference === "Less than 1 hour") {
             searchQuery += "&with_runtime.lte=60";
@@ -166,7 +196,6 @@ function fetchRecommendations() {
         });
 }
 
-// Next button functionality
 nextButton.addEventListener('click', () => {
     const selectedOption = Array.from(surveyForm.elements)
         .filter(input => input.checked)
@@ -194,7 +223,6 @@ nextButton.addEventListener('click', () => {
     }
 });
 
-// Back button functionality
 backButton.addEventListener('click', () => {
     currentQuestionIndex--; 
     while (currentQuestionIndex > 0 && shouldSkipQuestion(currentQuestionIndex)) {
@@ -203,8 +231,8 @@ backButton.addEventListener('click', () => {
     loadQuestion(); 
 });
 
-// Initialize survey and visitor counter
 window.onload = function() {
     loadQuestion();
-    updateVisitorCount(); // Fetch and update visitor count when the page loads
+    updateVisitorCount();
+    setupRealtimeListener();
 };
