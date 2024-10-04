@@ -13,8 +13,7 @@
         <button id="nextButton" class="top-button">Next</button>
         
         <form id="surveyForm">
-            <div id="questionContainer">
-            </div>
+            <div id="questionContainer"></div>
         </form>
         
         <button id="backButton" class="bottom-button" style="display: none;">Back</button>
@@ -34,8 +33,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-        // Your web app's Firebase configuration
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD0zsSdfgDrp5hMp4t31TMp96_QzMmU28I",
             authDomain: "movie-series-recommendation.firebaseapp.com",
@@ -44,19 +44,29 @@
             messagingSenderId: "781848068400",
             appId: "1:781848068400:web:bf639c838e19901e6008f5",
             measurementId: "G-HT5SRVXKL1",
-            databaseURL: "https://movie-series-recommendation-default-rtdb.firebaseio.com" // Add this line
+            databaseURL: "https://movie-series-recommendation-default-rtdb.firebaseio.com"
         };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const database = getDatabase(app);
+        const auth = getAuth();
 
-        // Make Firebase instances available globally
-        window.firebaseApp = app;
-        window.firebaseDatabase = database;
+        // Sign in anonymously to Firebase
+        signInAnonymously(auth)
+          .then(() => {
+              console.log("Signed in anonymously");
+              // After successful authentication, set up the visitor counter and listener
+              updateVisitorCount();
+              setupRealtimeListener();
+          })
+          .catch((error) => {
+              console.error("Error during anonymous sign-in:", error);
+          });
     </script>
-    
+
+    <!-- Your survey logic -->
     <script src="script.js"></script>
 </body>
 </html>
