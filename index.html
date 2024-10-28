@@ -10,32 +10,36 @@
     <div class="container">
         <h1>Movie/Series Recommendation Survey</h1>
         
-        <button id="nextButton" class="top-button">Next</button>
-        
+        <!-- Back button at the top -->
+        <button id="backButton" class="top-button" style="display: none;">Back</button>
+
+        <!-- Survey form -->
         <form id="surveyForm">
             <div id="questionContainer"></div>
         </form>
-        
-        <button id="backButton" class="bottom-button" style="display: none;">Back</button>
-        
+
+        <!-- Next button at the bottom -->
+        <button id="nextButton" class="bottom-button">Next</button>
+
+        <!-- Result display container -->
         <div id="resultContainer" style="display:none;">
             <h2>Your Recommendation:</h2>
             <p id="movieRecommendation"></p>
         </div>
-        
+
+        <!-- Visitor counter -->
         <div id="visitor-counter">
             Visitors: <span id="visitor-count">0</span>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK and configuration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD0zsSdfgDrp5hMp4t31TMp96_QzMmU28I",
             authDomain: "movie-series-recommendation.firebaseapp.com",
@@ -57,7 +61,7 @@
         signInAnonymously(auth)
           .then(() => {
               console.log("Signed in anonymously");
-              // After successful authentication, set up the visitor counter and listener
+              // Set up the visitor counter and listener after authentication
               updateVisitorCount();
               setupRealtimeListener();
           })
@@ -66,7 +70,7 @@
           });
     </script>
 
-    <!-- Your survey logic -->
+    <!-- Main survey logic -->
     <script src="script.js"></script>
 </body>
 </html>

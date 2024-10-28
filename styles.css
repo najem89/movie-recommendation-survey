@@ -1,3 +1,4 @@
+/* General body styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -5,6 +6,7 @@ body {
     padding: 20px;
 }
 
+/* Container styling */
 .container {
     max-width: 600px;
     margin: auto;
@@ -14,12 +16,14 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Header styling */
 h1 {
     text-align: center;
     font-size: 28px;
     color: #007BFF;
 }
 
+/* Button styling */
 button {
     display: block;
     width: 40%;
@@ -45,14 +49,18 @@ button:active {
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Positioning for Back and Next buttons */
 .top-button {
     margin-bottom: 20px;
+    width: 50%;
 }
 
 .bottom-button {
     margin-top: 20px;
+    width: 50%;
 }
 
+/* Visitor counter styling */
 #visitor-counter {
     text-align: center;
     margin-top: 20px;
@@ -68,26 +76,31 @@ button:active {
     color: #007BFF;
 }
 
-/* Additional styles for survey elements */
+/* Survey question container styling */
 #questionContainer {
     margin: 20px 0;
 }
 
+/* Styling for each question and options */
 #questionContainer p {
-    font-size: 18px;
-    margin-bottom: 15px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    letter-spacing: normal;
 }
 
+/* Spacing between options */
 #questionContainer label {
     display: block;
-    margin: 10px 0;
+    margin: 5px 0;
     cursor: pointer;
 }
 
+/* Radio button styling */
 #questionContainer input[type="radio"] {
     margin-right: 10px;
 }
 
+/* Result container styling */
 #resultContainer {
     margin-top: 20px;
     padding: 15px;
