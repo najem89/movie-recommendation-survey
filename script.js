@@ -118,6 +118,18 @@ function loadQuestion() {
         fetchRecommendations();
     }
 }
+async function checkAvailability(title, year) {
+    const url1 = `https://himovies.to/`;  // Link to homepage
+    const url2 = `https://web2.topcinema.cam/`;  // Link to homepage
+
+    // Providing links with search instructions
+    const links = [
+        `<a href="${url1}" target="_blank">Search "${title} (${year})" on Himovies</a>`,
+        `<a href="${url2}" target="_blank">Search "${title} (${year})" on TopCinema</a>`
+    ];
+
+    return links.join(' or ');
+}
 
 function fetchRecommendations() {
     const contentType = selectedOptions[0];
@@ -173,15 +185,18 @@ function fetchRecommendations() {
 
     fetch(`https://api.themoviedb.org/3/${endpoint}${searchQuery}`)
         .then(response => response.json())
-        .then(data => {
+        .then(async data => {
             if (data.results.length > 0) {
-                const recommendations = data.results.slice(0, 5).map(content => {
+                const recommendations = await Promise.all(data.results.slice(0, 5).map(async content => {
                     const title = contentType === "Movies" ? content.title : content.name;
                     const rating = content.vote_average ? `${content.vote_average.toFixed(1)}/10` : 'N/A'; 
-                    return `${title} (Rating: ${rating})`;
-                }).join(', ');
 
-                movieRecommendation.textContent = `Recommended ${contentType}: ${recommendations}`;
+                    // Check availability for each title
+                    const availabilityLink = await checkAvailability(title);
+                    return availabilityLink ? `${availabilityLink} (Rating: ${rating})` : `${title} (Rating: ${rating})`;
+                }));
+
+                movieRecommendation.innerHTML = `Recommended ${contentType}: ${recommendations.join(', ')}`;
             } else {
                 movieRecommendation.textContent = `No ${contentType.toLowerCase()} recommendations found matching your criteria.`;
             }

@@ -5,41 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie/Series Recommendation Survey</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f4f4f4, #e0eafc);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            color: #007BFF;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #007BFF, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(90deg, #0056b3, #003a73);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #visitor-counter {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        #visitor-count {
+            font-weight: bold;
+            color: #007BFF;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Movie/Series Recommendation Survey</h1>
         
-        <!-- Back button at the top -->
-        <button id="backButton" class="top-button" style="display: none;">Back</button>
-
-        <!-- Survey form -->
         <form id="surveyForm">
             <div id="questionContainer"></div>
         </form>
-
-        <!-- Next button at the bottom -->
-        <button id="nextButton" class="bottom-button">Next</button>
-
-        <!-- Result display container -->
-        <div id="resultContainer" style="display:none;">
+        
+        <div class="button-container">
+            <button id="backButton" class="nav-button" style="display: none;">Back</button>
+            <button id="nextButton" class="nav-button">Next</button>
+        </div>
+        
+        <div id="resultContainer" style="display: none;">
             <h2>Your Recommendation:</h2>
             <p id="movieRecommendation"></p>
         </div>
-
-        <!-- Visitor counter -->
+        
         <div id="visitor-counter">
             Visitors: <span id="visitor-count">0</span>
         </div>
     </div>
 
-    <!-- Firebase SDK and configuration -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD0zsSdfgDrp5hMp4t31TMp96_QzMmU28I",
             authDomain: "movie-series-recommendation.firebaseapp.com",
@@ -61,7 +126,7 @@
         signInAnonymously(auth)
           .then(() => {
               console.log("Signed in anonymously");
-              // Set up the visitor counter and listener after authentication
+              // After successful authentication, set up the visitor counter and listener
               updateVisitorCount();
               setupRealtimeListener();
           })
@@ -70,7 +135,7 @@
           });
     </script>
 
-    <!-- Main survey logic -->
+    <!-- Your survey logic -->
     <script src="script.js"></script>
 </body>
 </html>
