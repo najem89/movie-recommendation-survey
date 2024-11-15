@@ -2,7 +2,7 @@
 const CONFIG = {
   API_KEY: '16c5651f75b515d6f334afeff8f9536a',
   API_BASE_URL: 'https://api.themoviedb.org/3',
-  RESULTS_LIMIT: 5,
+  RESULTS_LIMIT: 10,
   GENRE_MAPS: {
     Movies: {
       "Action": 28,
